@@ -4,16 +4,36 @@ const vscode = require('vscode');
 const fs = require('fs');
 const readline = require('readline');
 
+const moduleMapping = require('./module_code_mapping');
+const typeMapping = {
+    module: 'm',
+    component: 'c',
+    url: 'u'
+}
+
 function generateAuthCode() {
+    const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
+    
+    const pathArray = currentlyOpenTabfilePath.split('/');
+    const pathLength = pathArray.length;
+    const module = pathArray[pathLength - 1];
+    const type = pathArray[pathLength - 3];
+    const typeCode = typeMapping[type];
+    const moduleCode = moduleMapping[module];
+ 
+    if (!typeCode || !moduleCode) {
+        vscode.window.showInformationMessage('文件路径有误，此功能仅限于权限模块'); 
+        return;
+    }
+
     const options = {
         prompt: "Please input the code prefix: ",
-        placeHolder: "Component Name"
+        placeHolder: "Component Name",
+        value: typeCode + moduleCode
     }
 
     vscode.window.showInputBox(options).then( prefix => {
         let nums = [];
-
-        const currentlyOpenTabfilePath = vscode.window.activeTextEditor.document.fileName;
 
         const rl = readline.createInterface({
             input: fs.createReadStream(currentlyOpenTabfilePath),
@@ -46,10 +66,11 @@ function generateAuthCode() {
             if (num == maxFromLength) {
                 num++;
                 const fileContentArr = fs.readFileSync(currentlyOpenTabfilePath, 'utf8').split(/\r?\n/);
+                const contentLength = fileContentArr.length;
 
                 fs.truncateSync(currentlyOpenTabfilePath);
 
-                fileContentArr.forEach( line => {
+                fileContentArr.forEach( (line, index) => {
                     let content = line;
                     if (line.slice(-1) == '#') {
                         const length = content.length;
@@ -57,7 +78,7 @@ function generateAuthCode() {
                         num++;
                     } 
 
-                    fs.appendFileSync(currentlyOpenTabfilePath, content + "\n");
+                    fs.appendFileSync(currentlyOpenTabfilePath, content + ((index == contentLength - 1) ? '' : '\n'));
                 })
 
                 vscode.window.showInformationMessage('Code is successfully generated!'); 
