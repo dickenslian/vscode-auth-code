@@ -2,7 +2,7 @@
     "name": "auth-code",
     "displayName": "auth-code",
     "description": "generate the next auth code",
-    "version": "1.0",
+    "version": "1.0.0",
     "publisher": "dabai",
     "repository": {
         "type" : "git",
