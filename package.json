@@ -1,8 +1,8 @@
 {
     "name": "auth-code",
     "displayName": "auth-code",
-    "description": "prompt the next auth code",
-    "version": "0.0.4",
+    "description": "generate the next auth code",
+    "version": "0.0.5",
     "publisher": "dabai",
     "repository": {
         "type" : "git",
@@ -16,25 +16,17 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.promptAuthCode",
         "onCommand:extension.generateAuthCode"
     ],
     "main": "./extension",
     "contributes": {
         "commands": [{
-            "command": "extension.promptAuthCode",
-            "title": "Next Auth Code"
-        },{
             "command": "extension.generateAuthCode",
             "title": "Generate Auth Code"
         }],
         "menus": {
             "editor/context": [
-                {
-                    "command": "extension.promptAuthCode",
-                    "group": "1_modification"
-                },
-                {
+               {
                     "command": "extension.generateAuthCode",
                     "group": "1_modification"
                 }

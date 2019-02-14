@@ -64,7 +64,9 @@ function generateAuthCode() {
             num = parseInt(num, 36);
     
             if (num == maxFromLength) {
-                num++;
+                if (num !== 0) {
+                    num++;   
+                }
                 const fileContentArr = fs.readFileSync(currentlyOpenTabfilePath, 'utf8').split(/\r?\n/);
                 const contentLength = fileContentArr.length;
 
